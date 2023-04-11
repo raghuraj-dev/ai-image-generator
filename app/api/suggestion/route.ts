@@ -1,7 +1,7 @@
 export async function GET(request: Request) {
     // Connect to our Microsoft Azure function endpoint
     const response = await fetch(
-        "http://localhost:7071/api/getChatGPTSuggestion",
+        "https://raghu-ai-image-generator.azurewebsites.net/api/getchatgptsuggestion",
         {
             cache: "no-store",
         }

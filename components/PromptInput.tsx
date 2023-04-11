@@ -1,5 +1,6 @@
 "use client";
 
+import fetchImages from "@/lib/fetchImages";
 import fetchSuggestionFromChatGPT from "@/lib/fetchSuggestionFromChatGPT";
 import { FormEvent, useState } from "react";
 import useSWR from "swr";
@@ -13,6 +14,10 @@ function PromptInput() {
         mutate,
         isValidating,
     } = useSWR("/api/suggestion", fetchSuggestionFromChatGPT, {
+        revalidateOnFocus: false,
+    });
+
+    const { mutate: updateImages } = useSWR("images", fetchImages, {
         revalidateOnFocus: false,
     });
 
@@ -34,6 +39,8 @@ function PromptInput() {
         });
 
         const data = await res.json();
+
+        updateImages();
     };
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -54,9 +61,7 @@ function PromptInput() {
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     placeholder={
-                        (loading && "ChatGPT is thinking of a suggestion...") ||
-                        suggestion ||
-                        "Enter a prompt..."
+                        (loading && "ChatGPT is thinking of a suggestion...") || suggestion || "Enter a prompt..."
                     }
                     className="flex-1 rounded-md p-4 outline-none"
                 />
@@ -90,9 +95,7 @@ function PromptInput() {
             {input && (
                 <p className="pl-2 pt-2 font-light italic">
                     Suggestion:{" "}
-                    <span className="text-violet-500">
-                        {loading ? "ChatGPT is thinking..." : suggestion}
-                    </span>
+                    <span className="text-violet-500">{loading ? "ChatGPT is thinking..." : suggestion}</span>
                 </p>
             )}
         </div>

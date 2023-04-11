@@ -51,5 +51,7 @@ app.http("generateImage", {
         } catch (error) {
             console.error("Error uploading file:", error.message);
         }
+
+        return { body: "Successfully uploaded Image" }
     },
 });
